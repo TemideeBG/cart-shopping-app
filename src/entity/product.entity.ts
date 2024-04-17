@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, BaseEntit
 import { UserEntity } from "./user.entity";
 import { ProductInterface } from "../interfaces/product.interface";
 import { CartEntity } from "./cart.entity";
+import { ReviewEntity } from "./review.entity";
 
  @Entity({ name: "products" })
 export class ProductEntity implements ProductInterface {
@@ -63,7 +64,7 @@ export class ProductEntity implements ProductInterface {
     @Column({ type: 'varchar', nullable: false })
     inventory_number: string;
 
-    @Column({ type: 'decimal', precision: 5, scale: 2, default: 0 })
+    @Column({ type: 'decimal', default: 0 })
     average_rating: number;
 
     @Column({ type: 'int', default: 0 })
@@ -75,11 +76,17 @@ export class ProductEntity implements ProductInterface {
     @OneToMany(() => CartEntity, cart => cart.product)
     carts: CartEntity[];
 
-    /*
+    @OneToMany(() => ReviewEntity, review => review.product)
+    reviews: ReviewEntity[];
+}
+
+
+
+
+
+  /*
     @AfterLoad()
     updateNumOfRequested(): void {
         this.num_of_products_requested = this.carts.reduce((total, cart) => total + cart.quantity, 0);
     }
 */
-
-}

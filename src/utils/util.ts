@@ -20,7 +20,6 @@ export const isEmpty = (value: string | number | object): boolean => {
     }
   };
   
-
   export const generateInvoiceNumber = () => {
     const prefix = "EBI-";
     const suffix = generate({
@@ -31,4 +30,36 @@ export const isEmpty = (value: string | number | object): boolean => {
   
     return id;
   };
+
+  export const generateClientSecret = () => {
+    const prefix = "CLI-";
+    const suffix = generate({
+      length: 6,
+      charset: "numeric",
+    });
+    const id = prefix + suffix.padStart(6, "0");
   
+    return id;
+  };
+  
+  export const generateTrackingOrderID = () => {
+    const prefix = "ORD-";
+    const suffix = generate({
+      length: 6,
+      charset: "numeric",
+    });
+    const id = prefix + suffix.padStart(6, "0");
+  
+    return id;
+  };
+
+  export const generatePaymentID = () => {
+    const prefix = "PAY-";
+    const suffix = generate({
+      length: 6,
+      charset: "numeric",
+    });
+    const id = prefix + suffix.padStart(6, "0");
+  
+    return id;
+  };

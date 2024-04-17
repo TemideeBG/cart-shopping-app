@@ -2,6 +2,8 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateCol
 import { ProductEntity } from "./product.entity";
 import { User } from "../interfaces/user.interface";
 import { CartEntity } from "./cart.entity";
+import { OrderEntity } from "./order.entity";
+import { ReviewEntity } from "./review.entity";
 
 @Entity({ name: "users" })
 export class UserEntity implements User {
@@ -19,7 +21,7 @@ export class UserEntity implements User {
     full_name: string;
 
     @Column({
-        unique: true,
+        unique: true
       })
     email: string;
   
@@ -55,7 +57,8 @@ export class UserEntity implements User {
     age: number;
 
     @Column({
-        default: ""
+        default: "",
+        unique: true
     })
     phone_number: string;
 
@@ -71,8 +74,10 @@ export class UserEntity implements User {
     @OneToMany(() => CartEntity, cart => cart.user)
     carts: CartEntity[];
 
+    @OneToMany(() => OrderEntity, order => order.user)
+    orders: OrderEntity[];
+
+    @OneToMany(() => ReviewEntity, review => review.user)
+    reviews: ReviewEntity[];
 }
 
-/*
-
-*/

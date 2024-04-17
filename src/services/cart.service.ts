@@ -37,13 +37,15 @@ export class CartService  {
         req.body.user = req.user;
         const cart = new CartEntity();
         Object.assign(cart, createCartDto);
-        //cart.product = findProduct;
+        cart.product = findProduct;
         cart.currency = findProduct.currency;
         console.log(cart.currency);
         cart.amount = `${cart.currency}${cart.price}`;
         
         const savedCart = await this.cartRepository.save(cart);
-        console.log(savedCart);
+        const updatedProduct = await this.productService.updateNumberOfProductsReqAfterCartAddition(findProduct.id, findProduct.num_of_products_requested, createCartDto.quantity);
+
+        console.log(savedCart, updatedProduct);
         return savedCart; 
     };
 
@@ -52,7 +54,7 @@ export class CartService  {
             .createQueryBuilder("cart")
             .leftJoinAndSelect("cart.user", "user")
             .leftJoinAndSelect("cart.product", "product")
-            .select(["cart", "user.id", "user.full_name", "user.email", "user.home_address", "user.city", "product.name", "product.price", "product.description", "product.category", "product.company"])
+            .select(["cart", "user.id", "user.full_name", "user.email", "user.home_address", "user.city", "product.id", "product.name", "product.price", "product.description", "product.category", "product.company"])
             .where("cart.id = :id", { id })
             .getOne();
     
@@ -75,7 +77,7 @@ export class CartService  {
             .createQueryBuilder("cart")
             .leftJoinAndSelect("cart.user", "user")
             .leftJoinAndSelect("cart.product", "product")
-            .select(["cart", "user.full_name", "user.email", "user.home_address", "user.city", "product.name", "product.price", "product.description", "product.category", "product.company"])
+            .select(["cart", "user.full_name", "user.email", "user.home_address", "user.city", "product.id", "product.name", "product.price", "product.description", "product.category", "product.company"])
             .where("user.id = :userId", { userId: req.user.id })
             .getMany();
     
@@ -84,7 +86,7 @@ export class CartService  {
         }
     
         return carts;
-    }
+    };
     
 
     public async getAllProducts(): Promise<CartInterface[]> {
@@ -92,7 +94,7 @@ export class CartService  {
             .createQueryBuilder("cart")
             .leftJoinAndSelect("cart.user", "user")
             .leftJoinAndSelect("cart.product", "product")
-            .select(["cart", "user.full_name", "user.email", "user.home_address", "user.city", "product.name", "product.price", "product.description", "product.category", "product.company"])
+            .select(["cart", "user.full_name", "user.email", "user.home_address", "user.city", "product.id", "product.name", "product.price", "product.description", "product.category", "product.company"])
             .getMany();
 
         if (!allCarts || allCarts.length === 0) {
@@ -106,7 +108,7 @@ export class CartService  {
         let isvalidProduct:ProductInterface = await this.productService.getSingleProduct(productId);
         if(!isvalidProduct) throw new HttpException(StatusCodes.NOT_FOUND, `Product with id:${productId} not found`);
 
-        let cartToUpdate = await this.cartRepository.findOne({ where: { id:cartId } });
+        let cartToUpdate = await this.cartRepository.findOne({ where: { id:cartId }, relations: ["user","product"] });
         if (!cartToUpdate) {
           throw new  HttpException(StatusCodes.NOT_FOUND, `cart with id:${cartId} not found`);
         };
@@ -119,7 +121,10 @@ export class CartService  {
         // Update the product's properties with provided data from updateProductDto
         Object.assign(cartToUpdate, updateCartDto);
        
+        const updatedProduct = await this.productService.updateNumberOfProductsReqAfterCartUpdate(isvalidProduct.id, isvalidProduct.num_of_products_requested, cartToUpdate.quantity, quantity);
+        console.log(cartToUpdate.quantity, quantity);
         const newCartToUpdate = await this.cartRepository.save(cartToUpdate);
+        console.log(newCartToUpdate,updatedProduct);
         return newCartToUpdate;
       };
 
@@ -127,13 +132,15 @@ export class CartService  {
         const userId = req.user.id;
         const findUser:User = await this.userService.findById(userId,req);
         if(!findUser) throw new HttpException(StatusCodes.NOT_FOUND, `User with id:${userId} not found`);
-        const cartToDelete = await this.cartRepository.findOne({ where: { id:cartId }, relations: ["user"] });
+        const cartToDelete = await this.cartRepository.findOne({ where: { id:cartId }, relations: ["user","product"] });
         if (!cartToDelete) {
           throw new HttpException(StatusCodes.NOT_FOUND, `Cart with ID ${cartId} not found`);
         };
         const hasAdminRole = req.user?.role.includes('admin') || req.user?.role.includes('super-admin');
         console.log(cartToDelete.user.id, req.user.id, hasAdminRole);
         if (cartToDelete.user.id !== req.user.id && !hasAdminRole) throw new HttpException(StatusCodes.UNAUTHORIZED,'You do not have permission to delete this cart!!');
+        console.log(cartToDelete.product.id, cartToDelete.product.num_of_products_requested, cartToDelete.quantity);
+        const updatedProduct = await this.productService.updateNumberOfProductsReqAfterCartRemoval(cartToDelete.product.id, cartToDelete.product.num_of_products_requested, cartToDelete.quantity);
         await this.cartRepository.remove(cartToDelete);
         return { msg: `Cart placed by: ${findUser.first_name} has been Successfully Deleted` };
       };

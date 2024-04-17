@@ -9,8 +9,9 @@ import { BadRequestError, NotFoundError } from "../errors";
 import { isEmpty } from "../utils/util";
 import { StatusCodes } from "http-status-codes";
 import { HttpException } from "../exceptions/HttpException";
-import CircularJSON from 'circular-json';
-import cloneDeep from 'lodash/cloneDeep';
+import * as dotenv from "dotenv";
+import { isTokenValid } from "../utils/jwt";
+dotenv.config();
 import * as _ from 'lodash';
 
 
@@ -74,6 +75,25 @@ export class AuthService {
     
       return { newSanitizedAdmin };
     };
+
+    /*
+    public async logout(token:string, req:AuthenticatedRequest, res:Response) {  
+      if (isEmpty(token)) throw new BadRequestError("Please provide the required token");
+
+      const adminRepository = AppDataSource.getRepository(this.users);
+      const existingAdmin = await adminRepository.findOne({ where: { email: adminData.email }  });
+      if (existingAdmin) throw new HttpException(StatusCodes.BAD_REQUEST, 'Email is already in use. Please choose another email.')
+      const encryptedPassword = await encrypt.encryptpass(adminData.password);
+      const createAdminData = await adminRepository.create({ ...adminData, password: encryptedPassword });
+      createAdminData.full_name = `${createAdminData.first_name} ${createAdminData.last_name}`;
+      createAdminData.age = userAge(createAdminData.date_of_birth);
+      await adminRepository.save(createAdminData);
+      const newSanitizedAdmin = this.sanitizeUser(createAdminData);
+      console.log(newSanitizedAdmin);
+    
+      return { newSanitizedAdmin };
+    };
+    */
 
     // Adjusted sanitizeUser method
      public sanitizeUser(user: User): Partial<User> {

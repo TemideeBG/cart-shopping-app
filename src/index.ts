@@ -7,6 +7,9 @@ import AuthRoute from './routes/auth.route';
 import UserRoute from "./routes/user.route";
 import ProductRoute from "./routes/product.route";
 import CartRoute from "./routes/cart.route";
+import OrderRoute from "./routes/order.route";
+import ReviewRoute from "./routes/review.route";
+
 dotenv.config();
 
 const app = express();
@@ -19,12 +22,13 @@ const authRoute = new AuthRoute();
 const userRoute = new UserRoute();
 const productRoute = new ProductRoute();
 const cartRoute = new CartRoute();
-
+const orderRoute = new OrderRoute();
+const reviewRoute = new ReviewRoute();
 
 app.get("/api/v1", (req, res) => {
   res.json({
-      message:"E-COMMERCE API V1, [Health check::: API up and running]"
-      //postmanLink: "https://www.postman.com/galactic-resonance-793427/workspace/babban-gona-hackathon/collection/26636754-1a805b8c-845a-4776-a9fd-1ca256404349?action=share&creator=26636754"
+      message: "E-COMMERCE API V1, [Health check::: API up and running]",
+      postmanLink: "https://www.postman.com/galactic-resonance-793427/workspace/e-commerce/collection/26636754-fdf9de40-f835-40d4-acf2-4d54c29b450b?action=share&creator=26636754"
   })
 });
 
@@ -33,6 +37,8 @@ app.use('/api/v1', authRoute.router);
 app.use('/api/v1', userRoute.router);
 app.use('/api/v1', productRoute.router);
 app.use('/api/v1', cartRoute.router);
+app.use('/api/v1', orderRoute.router);
+app.use('/api/v1', reviewRoute.router);
 
 app.use(errorHandlerMiddleware);
 

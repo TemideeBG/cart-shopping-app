@@ -2,9 +2,11 @@ import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { UserService } from "../services/user.service";
 import { HttpException } from "../exceptions/HttpException";
+import { BlackListedTokenService } from "../services/blacklisted-token.service";
 
 export class UserController {
-    public userService = new UserService()
+    public userService = new UserService();
+    public blackListedTokenService = new BlackListedTokenService();
 
     public findUserById = async (req:Request, res:Response, next:NextFunction) => {
             const user = await this.userService.findById(+req.params.user_id,req);
@@ -32,4 +34,9 @@ export class UserController {
             const user = await this.userService.delete(+req.params.user_id, req)
             return res.status(StatusCodes.OK).json({ message: 'successfully deleted user' });    
     };
+
+    public findAllBlackListedTokens = async (req:Request, res:Response, next:NextFunction) => {
+        const tokens = await this.blackListedTokenService.getAllBlackListedTokens();
+        return res.status(StatusCodes.CREATED).json({ data: tokens, message: 'successfully retrieved all black-listed tokens' });    
+};
 }

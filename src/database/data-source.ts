@@ -2,8 +2,11 @@ import "reflect-metadata";
 import { DataSource } from "typeorm";
 import * as dotenv from "dotenv";
 import { UserEntity } from "../entity/user.entity";
-import { ProductEntity } from "../entity/product.entity";
+import { BlackListedTokenEntity } from "../entity/blacklisted-token.entity";
 import { CartEntity } from "../entity/cart.entity";
+import { OrderEntity } from "../entity/order.entity";
+import { ProductEntity } from "../entity/product.entity";
+import { ReviewEntity } from "../entity/review.entity";
 
 dotenv.config();
 
@@ -20,7 +23,7 @@ export const AppDataSource = new DataSource({
     synchronize: true,
     logging: false,
     //entities: [__dirname + "/entity/*.ts"], // Use a wildcard for TypeScript files
-    entities: [UserEntity, ProductEntity, CartEntity],
+    entities: [UserEntity, ProductEntity, CartEntity, OrderEntity, ReviewEntity, BlackListedTokenEntity],
     migrations: [__dirname + "/migration/*.ts"],
     subscribers: [],
 })

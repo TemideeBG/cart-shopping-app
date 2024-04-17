@@ -17,7 +17,8 @@ export class ProductController {
     };
 
     public findAllProducts = async (req:Request, res:Response, next:NextFunction) => {
-            const products = await this.productService.getAllProducts();
+            const queryStry = req.query;
+            const products = await this.productService.getAll(queryStry,req);
             return res.status(StatusCodes.OK).json({ data: products, message: 'successfully retrieved all product details' });     
     };
 

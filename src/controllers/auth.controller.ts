@@ -2,9 +2,11 @@ import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { HttpException } from "../exceptions/HttpException";
 import { AuthService } from "../services/auth.service";
+import { BlackListedTokenService } from "../services/blacklisted-token.service";
 
 export class AuthController {
-    public authService = new AuthService()
+    public authService = new AuthService();
+    public blackListedTokenService = new BlackListedTokenService();
 
     public signUp = async (req:Request, res:Response, next:NextFunction) => {
             const userData = req.body;
@@ -24,4 +26,10 @@ export class AuthController {
             const signUpAdminData = await this.authService.adminSignup(adminData,req,res);
             return res.status(StatusCodes.CREATED).json({ data: signUpAdminData, message: `Successfully Registered ${signUpAdminData.newSanitizedAdmin.full_name} as ${signUpAdminData.newSanitizedAdmin.role}` });      
     };
-}
+
+    public logout = async (req:Request, res:Response, next:NextFunction) => {
+            const token = req.headers.authorization;
+            const logoutUser = await this.blackListedTokenService.createBlackListedToken(token,req);
+            return res.status(StatusCodes.OK).json({ data: logoutUser });     
+    };
+};
