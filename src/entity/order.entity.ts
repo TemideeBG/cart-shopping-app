@@ -32,7 +32,7 @@ export class OrderEntity {
     @Column({ nullable: true })
     payment_intent_id: string;
 
-    @Column({ nullable: false, type: "simple-array" })
+    @Column({ nullable: false, type: "simple-json" })
     orderItems: SingleOrderItem[];
 
     @ManyToOne(() => UserEntity, user => user.orders, { onDelete: 'CASCADE' })

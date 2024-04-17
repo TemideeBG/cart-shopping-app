@@ -8,11 +8,9 @@ Steps to run this project:
 
 ## Hosted Project
 
-[Shopping-Cart-APP](https://moviestore-app.onrender.com)
-
 #### Setup Basic Express Server
 
-# Movie App Schema Design
+# Shopping App Schema Design
 
 ## User Story
 
@@ -42,12 +40,11 @@ Steps to run this project:
 - Users can view reviews on a particular product and all products available
 - 'ikea' company grants it's users a total discount of 5% for products added to cart whereas other companies doesn't give their users/shoppers discount
 
-### Admin Details:
+### Sper-Admin Details:
 - name: "toluwanibabs@gmail.com"
 - password: "everlasting"
 
 ### Postman Link:
 https://www.postman.com/galactic-resonance-793427/workspace/e-commerce/collection/26636754-fdf9de40-f835-40d4-acf2-4d54c29b450b?action=share&creator=26636754
 
-### Render Link:
-https://moviestore-app.onrender.com
+

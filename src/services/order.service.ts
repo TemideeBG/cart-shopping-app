@@ -40,7 +40,6 @@ export class OrderService  {
         const validCart = await this.cartService.getSingleCart(item.cartId, req);
         if (!validCart)
         throw new HttpException(StatusCodes.NOT_FOUND, `Cart with the given ID: ${item.cartId} not found`);
-        //console.log(validCart)
         
         const { price, quantity } = validCart;
         const singleOrderItem = {
@@ -51,7 +50,6 @@ export class OrderService  {
       console.log(singleOrderItem);
 
       orderItems = [...orderItems, singleOrderItem];
-      //orderItems.push(singleOrderItem);
       subTotal += singleOrderItem.quantity * price;
       console.log(orderItems, subTotal)
     };
@@ -64,7 +62,6 @@ export class OrderService  {
       order.tax = 0.2 * order.sub_total;
       order.total = shipping_fee + order.sub_total + order.tax;
       order.orderItems = orderItems;
-      //order.orderItems = JSON.stringify(orderItems); // Serialize orderItems to JSON string
 
       const payment_intent = await this.fakeStripeAPI(order.total, 'usd');
 
