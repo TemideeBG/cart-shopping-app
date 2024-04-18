@@ -39,7 +39,6 @@ export class BlackListedTokenService  {
 
         const newBlackListedToken = new BlackListedTokenEntity();
         newBlackListedToken.token = token;
-        //Object.assign(newBlackListedToken, createBlackListedTokenDto);
         
         const savedBlackListedToken = await this.blackListedTokenRepository.save(newBlackListedToken);
         return { message: `Successfully Logged out ${req.user.first_name}`}; 

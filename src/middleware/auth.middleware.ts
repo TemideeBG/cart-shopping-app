@@ -64,7 +64,6 @@ export const checkBlackist = async (req: AuthenticatedRequest, res: Response, ne
   const existingBlacklistedToken = await blackListedTokenService.getBlackListedTokenByToken(token, req);
   console.log(existingBlacklistedToken)
   if(existingBlacklistedToken) return res.status(StatusCodes.FORBIDDEN).json({ error: 'Unauthorized to access this route - Token blacklisted!! Please Login Afresh' });
-  // throw new HttpException(StatusCodes.UNAUTHORIZED, `Unauthorized to access routes - Token blacklisted!! Please Login Afresh`);
   next();
 };
 
