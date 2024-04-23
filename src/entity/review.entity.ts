@@ -29,4 +29,3 @@ export class ReviewEntity {
     @UpdateDateColumn()
     updatedAt: Date;
 };
-
